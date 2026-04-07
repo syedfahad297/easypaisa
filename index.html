@@ -70,7 +70,7 @@
         .header {
             text-align: center;
             padding: 40px 20px 20px;
-            background: #e6e3e39d;
+            background: rgb(247 247 247);
         }
 
         .success-circle {
@@ -118,7 +118,7 @@
         }
 
         .status-subtext {
-            color: var(--text-light);
+            color: #444444d4;
             font-size: 14px;
             margin-top: 5px;
         }
@@ -147,13 +147,13 @@
         }
 
         .data-text {
-            color: #4444448c;
+            color: #444444d4;
             font-size: 13px;
             font-weight: 600;
         }
 
         .data-subtext {
-           color: #4444448c;
+           color: #444444d4;
             font-size: 13px;
             font-weight: 400;
         }
@@ -201,6 +201,9 @@
             font-weight: 600;
             padding: 5px;
         }
+        .info-row {
+    margin-bottom: 12px; /* Isse gap kam ho jayega */
+}
     </style>
 </head>
 <body>
@@ -237,6 +240,15 @@
                 <p id="out-date">25 March 2026 <span id="out-time">2:43 PM</span></p>
                 <p>ID#<span id="out-id">43512911087</span></p>
             </div>
+            <div class="info-row">
+    <span class="label">Funding Source</span>
+    <div style="display: flex; align-items: center; gap: 5px; margin-top: 2px;">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#757575">
+            <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v100h-80v-100H200v560h560v-100h80v100q0 33-23.5 56.5T760-120H200Zm480-280q-33 0-56.5-23.5T600-480q0-33 23.5-56.5T680-560h200v160H680Zm0-80Zm120 0q17 0 28.5-11.5T840-480q0-17-11.5-28.5T800-520q-17 0-28.5 11.5T760-480q0 17 11.5 28.5T800-440Z"/>
+        </svg>
+        <p class="data-text" style="color: #666; font-weight: 400;">easypaisa Account</p>
+    </div>
+</div>
             <div class="info-row">
                 <span class="label">Sent to</span>
                 <p class="data-text" id="out-rname">Tanzila Waqar</p>
@@ -282,22 +294,56 @@
     </div>
 
     <script>
-        function sync() {
-            const val = (id) => document.getElementById(id).value;
-            const set = (id, text, def) => document.getElementById(id).innerText = text || def;
+    window.onload = function() {
+    // 1. Current Date aur Time generate karne ke liye
+    const now = new Date();
+    
+    // Date format: 07 April 2026
+    const options = { day: '2-digit', month: 'long', year: 'numeric' };
+    const dateStr = now.toLocaleDateString('en-GB', options);
+    
+    // Time format: 1:23 PM
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; 
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    const timeStr = `${hours}:${minutes} ${ampm}`;
 
-            set('out-date', val('in-date'), "25 March 2026 2:43 PM");
-            set('out-id', val('in-id'), "43512911087");
-            set('out-rname', val('in-rname'), "Tanzila Waqar");
-            set('out-rname-alt', val('in-rname'), "Tanzila Waqar");
-            set('out-rnum', val('in-rnum'), "03407233***");
-            set('out-sname', val('in-sname'), "SHAHZAD HASSAN");
-            set('out-snum', val('in-snum'), "03496827976");
-            
-            let amt = val('in-amt') || "2,500.00";
-            set('out-amt', amt, "2,500.00");
-            set('out-total', "Rs. " + amt, "Rs. 2,500.00");
-        }
+    const fullDateTime = `${dateStr} ${timeStr}`;
+
+    // 2. Random 11-digit Transaction ID (Easypaisa style)
+    // Ye 48 se shuru hone wali random ID generate karega
+    const randomID = Math.floor(48000000000 + Math.random() * 9000000000);
+
+    // 3. UI aur Input fields ko auto-update karna
+    document.getElementById('out-date').innerText = fullDateTime;
+    document.getElementById('in-date').value = fullDateTime;
+    
+    document.getElementById('out-id').innerText = randomID;
+    document.getElementById('in-id').value = randomID;
+};
+
+// Input fields mein typing ke waqt real-time update ke liye
+function sync() {
+    const val = (id) => document.getElementById(id).value;
+    const set = (id, text, def) => {
+        const element = document.getElementById(id);
+        if(element) element.innerText = text || def;
+    };
+
+    set('out-date', val('in-date'), "Loading...");
+    set('out-id', val('in-id'), "Loading...");
+    set('out-rname', val('in-rname'), "Receiver Name");
+    set('out-rname-alt', val('in-rname'), "Receiver Name");
+    set('out-rnum', val('in-rnum'), "03000000000");
+    set('out-sname', val('in-sname'), "Sender Name");
+    set('out-snum', val('in-snum'), "03000000000");
+    
+    let amt = val('in-amt') || "0.00";
+    set('out-amt', amt, "0.00");
+    set('out-total', "Rs. " + amt, "Rs. 0.00");
+}
     </script>
 </body>
 </html>

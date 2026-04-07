@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easypaisa Receipt</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+        
+        /* --- Aapki Original CSS (No Changes) --- */
+        :root {
+            --ep-green: #00b562;
+            --text-dark: #333333;
+            --text-light: #101010c7;
+            --bg-white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            font-family: "Google Sans Flex", sans-serif;
+            display: flex;
+            flex-direction: column; /* Form aur Receipt ko vertically set karne ke liye */
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* --- Simple Input Form Styling (Receipt ko distrub kiye baghair) --- */
+        .input-panel {
+            background: #fff;
+            padding: 15px;
+            width: 100%;
+            max-width: 420px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .input-panel input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-white);
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .close-icon {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 22px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+
+        .success-circle {
+            background: var(--ep-green);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            color: white;
+            font-size: 20px;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 24px;
+            color: #2b3947;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .status-title {
+            color: var(--ep-green);
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .status-subtext {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 10px 25px 30px;
+        }
+
+        .meta-data {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .info-row {
+            margin-bottom: 10px;
+        }
+
+        .label {
+            display: block;
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .data-text {
+            color: #4444448c;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .data-subtext {
+           color: #4444448c;
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .total-box {
+            margin-top: 15px;
+        }
+
+        .total-label {
+            color: var(--ep-green);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .total-amount {
+            font-size: 20px;
+            font-weight: 700;
+            color: #222;
+            margin-top: 6px;
+        }
+
+        .footer {
+            display: flex;
+            border-top: 1px solid #eee;
+            padding: 10px 0;
+            justify-content: flex-end;
+            background: #fafafa;
+        }
+
+        .footer-item {
+            text-align: center;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .footer-item svg {
+            width: 22px;
+            height: 22px;
+            fill: #666;
+            margin-bottom: 4px;
+        }
+
+        .footer-item p {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="input-panel">
+        <label>Date/ID</label>
+        <input type="text" id="in-date" placeholder="Date" onkeyup="sync()">
+        <input type="text" id="in-id" placeholder="Transaction ID" onkeyup="sync()">
+        
+        <label>Receiver Name & Number</label>
+        <input type="text" id="in-rname" placeholder="Receiver Name" onkeyup="sync()">
+        <input type="text" id="in-rnum" placeholder="Receiver Number" onkeyup="sync()">
+        
+        <label>Sender Name & Number</label>
+        <input type="text" id="in-sname" placeholder="Sender Name" onkeyup="sync()">
+        <input type="text" id="in-snum" placeholder="Sender Number" onkeyup="sync()">
+        
+        <label>Amount</label>
+        <input type="text" id="in-amt" placeholder="Amount (e.g. 2,500.00)" onkeyup="sync()">
+    </div>
+
+    <div class="container">
+        <span class="close-icon">&times;</span>
+        
+        <header class="header">
+            <div class="success-circle"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg></div>
+            <div class="logo"><span class="e">e</span>asypaisa</div>
+            <h1 class="status-title">Transaction Successful</h1>
+            <p class="status-subtext">Money has been sent</p>
+        </header>
+
+        <main class="content">
+            <div class="meta-data">
+                <p id="out-date">25 March 2026 <span id="out-time">2:43 PM</span></p>
+                <p>ID#<span id="out-id">43512911087</span></p>
+            </div>
+            <div class="info-row">
+                <span class="label">Sent to</span>
+                <p class="data-text" id="out-rname">Tanzila Waqar</p>
+                <p class="data-subtext" id="out-rnum">03407233***</p>
+            </div>
+            <div class="info-row">
+                <span class="label">Account Details</span>
+                <p class="data-text" id="out-rname-alt">Tanzila Waqar</p>
+            </div>
+            <div class="info-row">
+                <span class="label">Sent by</span>
+                <p class="data-text" id="out-sname">SHAHZAD HASSAN</p>
+                <p class="data-subtext" id="out-snum">03496827976</p>
+            </div>
+            <div class="info-row">
+                <span class="label">Amount</span>
+                <p class="data-text">Rs. <span id="out-amt">2,500.00</span></p>
+            </div>
+            <div class="info-row">
+                <span class="label">Fee / Charge</span>
+                <p class="data-text">No Charge</p>
+            </div>
+            <div class="total-box">
+                <span class="total-label">Total Amount</span>
+                <p class="total-amount" id="out-total">Rs. 2,500.00</p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-item">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M680-80q-50 0-85-35t-35-85q0-6 3-28L282-392q-16 15-37 23.5t-45 8.5q-50 0-85-35t-35-85q0-50 35-85t85-35q24 0 45 8.5t37 23.5l281-164q-2-7-2.5-13.5T560-760q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35q-24 0-45-8.5T598-672L317-508q2 7 2.5 13.5t.5 14.5q0 8-.5 14.5T317-452l281 164q16-15 37-23.5t45-8.5q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-200q0-17-11.5-28.5T680-240q-17 0-28.5 11.5T640-200q0 17 11.5 28.5T680-160ZM200-440q17 0 28.5-11.5T240-480q0-17-11.5-28.5T200-520q-17 0-28.5 11.5T160-480q0 17 11.5 28.5T200-440Zm508.5-291.5Q720-743 720-760t-11.5-28.5Q697-800 680-800t-28.5 11.5Q640-777 640-760t11.5 28.5Q663-720 680-720t28.5-11.5ZM680-200ZM200-480Zm480-280Z"/></svg>
+                <p>Share</p>
+            </div>
+            <div class="footer-item">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"/></svg>
+               <p>Save to Gallery</p>
+            </div>
+            <div class="footer-item">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+                <p>Save as PDF</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function sync() {
+            const val = (id) => document.getElementById(id).value;
+            const set = (id, text, def) => document.getElementById(id).innerText = text || def;
+
+            set('out-date', val('in-date'), "25 March 2026 2:43 PM");
+            set('out-id', val('in-id'), "43512911087");
+            set('out-rname', val('in-rname'), "Tanzila Waqar");
+            set('out-rname-alt', val('in-rname'), "Tanzila Waqar");
+            set('out-rnum', val('in-rnum'), "03407233***");
+            set('out-sname', val('in-sname'), "SHAHZAD HASSAN");
+            set('out-snum', val('in-snum'), "03496827976");
+            
+            let amt = val('in-amt') || "2,500.00";
+            set('out-amt', amt, "2,500.00");
+            set('out-total', "Rs. " + amt, "Rs. 2,500.00");
+        }
+    </script>
+</body>
+</html>

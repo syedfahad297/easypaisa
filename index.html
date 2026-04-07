@@ -204,6 +204,35 @@
         .info-row {
     margin-bottom: 12px; /* Isse gap kam ho jayega */
 }
+/* Mobile par Height aur Size dono kam karne ke liye */
+@media (max-width: 480px) {
+    .container {
+        transform: scale(0.85); 
+        transform-origin: top center;
+        margin-bottom: -100px;
+        margin-top: 30px;
+        /* Height kam karne ke liye margin mazeed adjust kiya */
+    }
+
+    /* Header ki lambai (Height) kam karne ke liye */
+    .header {
+        padding: 20px 15px 10px; 
+    }
+
+    /* Rows ke darmiyan gap kam karne ke liye */
+    .info-row {
+        margin-bottom: 5px; 
+    }
+
+    /* Content ki overall padding kam ki */
+    .content {
+        padding: 5px 20px 15px;
+    }
+
+    .input-panel {
+        margin-bottom: 5px;
+    }
+}
     </style>
 </head>
 <body>

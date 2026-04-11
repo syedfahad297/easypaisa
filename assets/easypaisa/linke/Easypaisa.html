@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easypaisa Success Screen</title>
+    <style>
+        :root {
+            --ep-green: #00cd70;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Input Panel for Editing */
+        .input-panel {
+            background: white;
+            padding: 15px;
+            width: 100%;
+            max-width: 380px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .input-panel label { font-size: 11px; font-weight: bold; color: var(--ep-green); display: block; margin-bottom: 4px; text-transform: uppercase; }
+        .input-panel input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 6px; outline: none; }
+
+        /* Main Mobile Container */
+        .container {
+            width: 100%;
+            max-width: 380px;
+            background: white;
+            min-height: 620px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            color: #d1d5db;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* Success Icon Area */
+        .success-header {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+            position: relative;
+        }
+
+        .main-check {
+            width: 75px;
+            height: 75px;
+            background-color: var(--ep-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        /* Decoration Dots */
+        .dot { position: absolute; width: 4px; height: 4px; background: #000; border-radius: 50%; }
+        .d1 { top: 15px; left: 135px; }
+        .d2 { top: 40px; left: 130px; }
+        .d3 { bottom: 15px; right: 135px; }
+        .d4 { top: 25px; right: 130px; }
+
+        /* Amount Section */
+        .amount-container {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .rs-symbol {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+            display: block;
+            margin-left: -130px;
+            margin-bottom: -5px;
+        }
+
+        .amount-val {
+            font-size: 40px;
+            font-weight: 700;
+            color: #2d3436;
+            letter-spacing: -1px;
+        }
+
+        .decimal { font-size: 26px; font-weight: 700; }
+
+        .status-msg {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-top: 5px;
+        }
+
+        /* Profile Section */
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .avatar-circle {
+            width: 85px;
+            height: 85px;
+            border: 1.5px solid var(--ep-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #4b5563;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .name-text {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .phone-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+            color: #374151;
+            font-size: 15px;
+        }
+
+        .ep-mini-logo {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .img-2 {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        /* Action List */
+        .action-list {
+            margin-top: auto;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
+            border-bottom: 1px solid #f9fafb;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .action-icon {
+            font-size: 18px;
+            margin-right: 15px;
+            color: #4b5563;
+        }
+
+        .action-label {
+            flex-grow: 1;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            display: block;
+        }
+
+        .chevron {
+            color: #1f2937;
+            font-size: 22px;
+            font-weight: 300;
+        }
+        a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="input-panel">
+        <label>Amount</label>
+        <input type="text" id="in-amt" value="1,500" oninput="update()">
+        <label>Receiver Name</label>
+        <input type="text" id="in-name" value="Sana Bibi" oninput="update()">
+        <label>Receiver Number</label>
+        <input type="text" id="in-num" value="031*******" oninput="update()">
+    </div>
+
+    <div class="container">
+        <div class="close-btn">&times;</div>
+
+        <div class="success-header">
+            <div class="dot d1"></div><div class="dot d2"></div>
+            <div class="dot d3"></div><div class="dot d4"></div>
+            
+            <div class="main-check">
+                <svg width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 13L9 17L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="amount-container">
+            <span class="rs-symbol">Rs.</span>
+            <div class="amount-val"><span id="out-amt">1,500</span><span class="decimal">.00</span></div>
+            <p class="status-msg">Successfully Sent to</p>
+        </div>
+
+        <div class="profile-card">
+            <div class="avatar-circle" id="out-initials">SB</div>
+            <div class="name-text" id="out-name">Sana Bibi</div>
+            <div class="phone-row">
+                <div class="ep-mini-logo">
+                    <img src="/assets/easypaisa/img/OIP (1).webp" class="img-2" onerror="this.style.display='none'">
+                </div>
+                <span id="out-num">03********</span>
+            </div>
+        </div>
+
+        <div class="action-list">
+            <a href="./receipt.html" class="action-item">
+                <span class="action-icon">📄</span>
+                <span class="action-label">View Receipt</span>
+                <span class="chevron">›</span>
+            </a>
+            <div class="action-item">
+                <span class="action-icon">🔗</span>
+                <span class="action-label">Share</span>
+                <span class="chevron">›</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function update() {
+            const name = document.getElementById('in-name').value || "Name";
+            const num = document.getElementById('in-num').value || "00000000000";
+            const amt = document.getElementById('in-amt').value || "0";
+
+            document.getElementById('out-name').innerText = name;
+            document.getElementById('out-num').innerText = num;
+            document.getElementById('out-amt').innerText = amt;
+
+            // Generate Initials
+            const words = name.trim().split(/\s+/);
+            let initials = "";
+            if (words.length >= 2) {
+                initials = words[0][0] + words[words.length - 1][0];
+            } else if (words.length === 1 && words[0] !== "") {
+                initials = words[0][0];
+            }
+            document.getElementById('out-initials').innerText = initials.toUpperCase();
+        }
+    </script>
+</body>
+</html>
